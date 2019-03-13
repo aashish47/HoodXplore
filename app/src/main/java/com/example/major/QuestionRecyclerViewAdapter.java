@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -31,7 +32,14 @@ public class QuestionRecyclerViewAdapter extends RecyclerView.Adapter<QuestionRe
     @NonNull
     @Override
     public QuestionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new QuestionViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_card,viewGroup,false));
+        View view = LayoutInflater.from(context).inflate(R.layout.list_item_card,viewGroup,false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"Added to database",Toast.LENGTH_LONG).show();
+            }
+        });
+        return new QuestionViewHolder(view);
     }
 
     @Override
@@ -44,6 +52,8 @@ public class QuestionRecyclerViewAdapter extends RecyclerView.Adapter<QuestionRe
 
 
         Picasso.get().load(imageUri).into(questionViewHolder.ivCardImage);
+
+
     }
 
     @Override

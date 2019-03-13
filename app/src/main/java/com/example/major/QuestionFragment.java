@@ -54,8 +54,7 @@ public class QuestionFragment extends Fragment implements LocationListener {
     Double latitude;
     Double longitude;
     String picture;
-
-
+    String uid;
 
     @Override
     public void onStart() {
@@ -83,6 +82,7 @@ public class QuestionFragment extends Fragment implements LocationListener {
             for (UserInfo profile : user.getProviderData()) {
 
                 // Name, email address, and profile photo Url
+                uid = profile.getUid();
                 name = profile.getDisplayName();
                 photoUrl = profile.getPhotoUrl();
                 picture = photoUrl.toString();
@@ -130,7 +130,7 @@ public class QuestionFragment extends Fragment implements LocationListener {
         String ques = etQues.getText().toString();
         if(!TextUtils.isEmpty(ques)){
             String id = mDatabase.push().getKey();
-            Question question = new Question(id,ques,locationLocal,latitude,longitude,name,picture);
+            Question question = new Question(uid,id,ques,locationLocal,latitude,longitude,name,picture);
             mDatabase.child(id).setValue(question);
             Toast.makeText(getContext(),"Added to database",Toast.LENGTH_LONG).show();
         }
