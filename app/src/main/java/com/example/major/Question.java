@@ -10,11 +10,12 @@ public class Question {
     Double longitude;
     String name;
     String picture;
+    String uid;
 
     public Question() {
     }
 
-    public Question(String questionID, String question, String location, Double latitude, Double longitude, String name, String picture) {
+    public Question(String uid,String questionID, String question, String location, Double latitude, Double longitude, String name, String picture) {
         this.questionID = questionID;
         this.question = question;
         this.location = location;
@@ -22,6 +23,11 @@ public class Question {
         this.longitude = longitude;
         this.name = name;
         this.picture = picture;
+        this.uid = uid;
+    }
+
+    public String getUid(){
+        return uid;
     }
 
     public String getQuestionID() {

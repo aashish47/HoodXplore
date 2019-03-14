@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +41,11 @@ public class HomeFragment extends Fragment implements LocationListener {
     String locationLocal;
     LocationManager locationManager;
 
+
+    ProgressBar progressBar;
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,6 +60,7 @@ public class HomeFragment extends Fragment implements LocationListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference("QUESTIONS");
+        progressBar = view.findViewById(R.id.progress_bar);
         questions = new ArrayList<>();
 
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -68,7 +75,9 @@ public class HomeFragment extends Fragment implements LocationListener {
     void getLocation() {
         try {
             locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5,this);
+
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,this);
+
         }
         catch(SecurityException e) {
             e.printStackTrace();
@@ -89,8 +98,11 @@ public class HomeFragment extends Fragment implements LocationListener {
                 //iterating through all the nodes
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Question q = postSnapshot.getValue(Question.class);
+
                         questions.add(q);
                 }
+
+
 
 
             }
@@ -117,7 +129,12 @@ public class HomeFragment extends Fragment implements LocationListener {
             questionsMain = new ArrayList<>();
             for(int i = 0; i < questions.size(); i++){
                 if(questions.get(i).getLocation().equals(locationLocal)){
-                    questionsMain.add(new Question(questions.get(i).questionID,
+
+
+
+                    questionsMain.add(new Question(questions.get(i).uid,
+                            questions.get(i).questionID,
+
                             questions.get(i).getQuestion(),
                             questions.get(i).getLocation(),
                             questions.get(i).getLatitude(),
@@ -127,8 +144,14 @@ public class HomeFragment extends Fragment implements LocationListener {
                 }
             }
             adapter = new QuestionRecyclerViewAdapter(getContext(), questionsMain);
+
+
+            adapter.notifyDataSetChanged();
             //attaching adapter to the listview
             recyclerView.setAdapter(adapter);
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+
 
         }catch(Exception e)
         {
@@ -151,4 +174,6 @@ public class HomeFragment extends Fragment implements LocationListener {
     public void onProviderDisabled(String provider) {
 
     }
+
 }
+
