@@ -18,8 +18,11 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ public class CommentActivity extends AppCompatActivity {
     ImageView imageView;
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRef;
+    DatabaseReference mComment;
     FirebaseAuth.AuthStateListener mAuthListner;
     FirebaseAuth mAuth;
     String picture;
@@ -61,10 +65,10 @@ public class CommentActivity extends AppCompatActivity {
 
 
 
-        CommentListAdapter commentListAdapter = new CommentListAdapter(getApplicationContext(),R.layout.layout_comment,comments);
-        listView.setAdapter(commentListAdapter);
+
 
         mRef = FirebaseDatabase.getInstance().getReference("QUESTIONS");
+        mComment = FirebaseDatabase.getInstance().getReference("QUESTIONS").child(questionId).child("Comments");
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -115,4 +119,35 @@ public class CommentActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Enter value",Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //attaching value event listener
+        mComment.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //clearing the previous  list
+                comments.clear();
+
+                //iterating through all the nodes
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Comment q = postSnapshot.getValue(Comment.class);
+
+                    comments.add(q);
+                }
+                CommentListAdapter commentListAdapter = new CommentListAdapter(getApplicationContext(),R.layout.layout_comment,comments);
+                listView.setAdapter(commentListAdapter);
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }

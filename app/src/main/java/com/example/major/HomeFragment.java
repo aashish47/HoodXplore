@@ -102,9 +102,6 @@ public class HomeFragment extends Fragment implements LocationListener {
                         questions.add(q);
                 }
 
-
-
-
             }
 
 
