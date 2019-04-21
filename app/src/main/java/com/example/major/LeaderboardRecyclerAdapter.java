@@ -16,13 +16,13 @@ import java.util.ArrayList;
 
 public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<LeaderboardRecyclerAdapter.LeaderboardViewHolder> {
 
-    public LeaderboardRecyclerAdapter(Context context, ArrayList<LeaderBoard> leaders) {
+    public LeaderboardRecyclerAdapter(Context context, ArrayList<Leaders> leaders) {
         this.context = context;
         this.leaders = leaders;
     }
 
     Context context;
-    ArrayList<LeaderBoard> leaders;
+    ArrayList<Leaders> leaders;
     String tempUri = null;
     Uri imageUri = null;
 
@@ -39,6 +39,7 @@ public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<Leaderboard
         tempUri = leaders.get(i).getPicture();
         imageUri = Uri.parse(tempUri);
         Picasso.get().load(imageUri).into(leaderboardViewHolder.ivLeaderImage);
+        leaderboardViewHolder.tvScore.setText(String.valueOf(leaders.get(i).getScore() * 10));
     }
 
     @Override
@@ -49,10 +50,12 @@ public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<Leaderboard
     class LeaderboardViewHolder extends RecyclerView.ViewHolder{
         TextView tvLeaderName;
         ImageView ivLeaderImage;
+        TextView tvScore;
         public LeaderboardViewHolder(@NonNull View itemView) {
             super(itemView);
             tvLeaderName = itemView.findViewById(R.id.tvLeaderName);
             ivLeaderImage = itemView.findViewById(R.id.ivLeaderImage);
+            tvScore = itemView.findViewById(R.id.tvScore);
         }
     }
 }

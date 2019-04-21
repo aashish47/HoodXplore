@@ -17,6 +17,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LeaderboardFragment extends Fragment {
 
@@ -66,8 +70,33 @@ public class LeaderboardFragment extends Fragment {
                     leaders.add(q);
                 }
 
+                HashMap<String,Integer> map = new HashMap<>();
+                for(int i = 0; i <  leaders.size(); i++){
+                    String pic = leaders.get(i).getPicture();
+                    if(map.containsKey(pic)){
+                        map.put(pic,map.get(pic) + 1);
+                    }
+                    else{
+                        map.put(pic,1);
+                    }
+                }
+
+                ArrayList<Leaders> leaders1 = new ArrayList<>();
+                for(Map.Entry<String,Integer> entry : map.entrySet()){
+                    String name = "";
+                    for(int i = 0; i < leaders.size(); i++){
+                        if(entry.getKey() == leaders.get(i).getPicture()){
+                            name = leaders.get(i).getName();
+                        }
+                    }
+                    Leaders leaders2 = new Leaders(name,entry.getValue(),entry.getKey());
+                    leaders1.add(leaders2);
+                }
+
+                Collections.sort(leaders1,new MyScoreComp());
+
                 //creating adapter
-                adapter = new LeaderboardRecyclerAdapter(getContext(), leaders);
+                adapter = new LeaderboardRecyclerAdapter(getContext(), leaders1);
                 //attaching adapter to the listview
                 recyclerView.setAdapter(adapter);
             }

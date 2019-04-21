@@ -102,6 +102,32 @@ public class HomeFragment extends Fragment implements LocationListener {
                         questions.add(q);
                 }
 
+                questionsMain = new ArrayList<>();
+                for(int i = 0; i < questions.size(); i++){
+                    if(questions.get(i).getLocation().equals("Rohini")){
+
+
+
+                        questionsMain.add(new Question(questions.get(i).uid,
+                                questions.get(i).questionID,
+
+                                questions.get(i).getQuestion(),
+                                questions.get(i).getLocation(),
+                                questions.get(i).getLatitude(),
+                                questions.get(i).getLongitude(),
+                                questions.get(i).getName(),
+                                questions.get(i).getPicture()));
+                    }
+                }
+                adapter = new QuestionRecyclerViewAdapter(getContext(), questionsMain);
+
+
+                adapter.notifyDataSetChanged();
+                //attaching adapter to the listview
+                recyclerView.setAdapter(adapter);
+                progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+
             }
 
 
@@ -123,31 +149,31 @@ public class HomeFragment extends Fragment implements LocationListener {
             locationLocal = obj.getSubLocality();
             //creating adapter
 
-            questionsMain = new ArrayList<>();
-            for(int i = 0; i < questions.size(); i++){
-                if(questions.get(i).getLocation().equals(locationLocal)){
-
-
-
-                    questionsMain.add(new Question(questions.get(i).uid,
-                            questions.get(i).questionID,
-
-                            questions.get(i).getQuestion(),
-                            questions.get(i).getLocation(),
-                            questions.get(i).getLatitude(),
-                            questions.get(i).getLongitude(),
-                            questions.get(i).getName(),
-                            questions.get(i).getPicture()));
-                }
-            }
-            adapter = new QuestionRecyclerViewAdapter(getContext(), questionsMain);
-
-
-            adapter.notifyDataSetChanged();
-            //attaching adapter to the listview
-            recyclerView.setAdapter(adapter);
-            progressBar.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+//            questionsMain = new ArrayList<>();
+//            for(int i = 0; i < questions.size(); i++){
+//                if(questions.get(i).getLocation().equals(locationLocal)){
+//
+//
+//
+//                    questionsMain.add(new Question(questions.get(i).uid,
+//                            questions.get(i).questionID,
+//
+//                            questions.get(i).getQuestion(),
+//                            questions.get(i).getLocation(),
+//                            questions.get(i).getLatitude(),
+//                            questions.get(i).getLongitude(),
+//                            questions.get(i).getName(),
+//                            questions.get(i).getPicture()));
+//                }
+//            }
+//            adapter = new QuestionRecyclerViewAdapter(getContext(), questionsMain);
+//
+//
+//            adapter.notifyDataSetChanged();
+//            //attaching adapter to the listview
+//            recyclerView.setAdapter(adapter);
+//            progressBar.setVisibility(View.GONE);
+//            recyclerView.setVisibility(View.VISIBLE);
 
 
         }catch(Exception e)
